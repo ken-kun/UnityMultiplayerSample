@@ -8,7 +8,8 @@ namespace NetworkMessages
         PLAYER_UPDATE,
         SERVER_UPDATE,
         HANDSHAKE,
-        PLAYER_INPUT
+        PLAYER_INPUT,
+        POSITION_UPDATE
     }
 
     [System.Serializable]
@@ -31,9 +32,13 @@ namespace NetworkMessages
         public PlayerUpdateMsg(){      // Constructor
             cmd = Commands.PLAYER_UPDATE;
             player = new NetworkObjects.NetworkPlayer();
+            
         }
     };
 
+
+
+    [System.Serializable]
     public class PlayerInputMsg:NetworkHeader{
         public Input myInput;
         public PlayerInputMsg(){
@@ -49,6 +54,18 @@ namespace NetworkMessages
             players = new List<NetworkObjects.NetworkPlayer>();
         }
     }
+
+    [System.Serializable]
+    public class PlayerPositionUpdate : NetworkHeader
+    {
+        public Vector3 myPosition;
+        public PlayerPositionUpdate()
+        {      // Constructor
+            cmd = Commands.PLAYER_UPDATE;
+            myPosition = new Vector3(0,0,0);
+        }
+    }
+
 } 
 
 namespace NetworkObjects
@@ -60,10 +77,17 @@ namespace NetworkObjects
     [System.Serializable]
     public class NetworkPlayer : NetworkObject{
         public Color cubeColor;
-        public Vector3 cubPos;
+
+        public GameObject playerCube;
+        //playerCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        public Vector3 cubePosition = Vector3.zero;
+
 
         public NetworkPlayer(){
             cubeColor = new Color();
         }
     }
 }
+
+

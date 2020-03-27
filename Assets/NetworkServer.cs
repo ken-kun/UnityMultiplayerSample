@@ -3,6 +3,7 @@ using UnityEngine.Assertions;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using NetworkMessages;
+using NetworkObjects;
 using System;
 using System.Text;
 
@@ -11,6 +12,7 @@ public class NetworkServer : MonoBehaviour
     public NetworkDriver m_Driver;
     public ushort serverPort;
     private NativeList<NetworkConnection> m_Connections;
+
 
     void Start ()
     {
@@ -42,9 +44,9 @@ public class NetworkServer : MonoBehaviour
         Debug.Log("Accepted a connection");
 
         //// Example to send a handshake message:
-        // HandshakeMsg m = new HandshakeMsg();
-        // m.player.id = c.InternalId.ToString();
-        // SendToClient(JsonUtility.ToJson(m),c);        
+        //HandshakeMsg m = new HandshakeMsg();
+        //m.player.id = c.InternalId.ToString();
+        //SendToClient(JsonUtility.ToJson(m), c);
     }
 
     void OnData(DataStreamReader stream, int i){
@@ -60,7 +62,7 @@ public class NetworkServer : MonoBehaviour
             break;
             case Commands.PLAYER_UPDATE:
             PlayerUpdateMsg puMsg = JsonUtility.FromJson<PlayerUpdateMsg>(recMsg);
-            Debug.Log("Player update message received!");
+            Debug.Log("Player update message received: " + "X: " + puMsg.player.cubePosition.x + " " + "Y: " + puMsg.player.cubePosition.y + " " + "Position: "+ puMsg.player.cubePosition);
             break;
             case Commands.SERVER_UPDATE:
             ServerUpdateMsg suMsg = JsonUtility.FromJson<ServerUpdateMsg>(recMsg);
@@ -123,6 +125,7 @@ public class NetworkServer : MonoBehaviour
                 }
 
                 cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream);
+                
             }
         }
     }
